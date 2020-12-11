@@ -24,13 +24,28 @@ sudo sh -c "echo 750000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed"
 ## CPU operations
 
 ```
+gcc -Wall -O0 counter_overhead.c -o ./counter_overhead
+sudo nice -20 taskset -c 0 ./counter_overhead
+
 gcc -Wall -O0 loop_overhead.c -o ./loop_overhead
 sudo nice -20 taskset -c 0 ./loop_overhead
+
+gcc -Wall -O0 call_overhead.c -o ./call_overhead
+sudo nice -20 taskset -c 0 ./call_overhead
+
+gcc -Wall -O0 syscall_overhead.c -o ./syscall_overhead
+sudo nice -20 taskset -c 0 ./syscall_overhead
 
 gcc -Wall -O0 thread_creation_overhead.c -o thread_creation_overhead -lpthread
 sudo nice -20 taskset -c 0 ./thread_creation_overhead
 
+gcc -Wall -O0 process_creation_overhead.c -o process_creation_overhead -lpthread
+sudo nice -20 taskset -c 0 ./process_creation_overhead
+
 ```
+
+`calc_average.py` can then be modified to repeat tests with specific repeat numbers.
+
 
 ## memory operations
 ```
