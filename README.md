@@ -4,7 +4,7 @@
 Raspberry Pi 4B running 32-bit Linux.
 
 ## Enable ARM CPU counter register access from userspace
-By default the user space program has no access to the cycle counter. To enable the use of the register for timestamping, you must load a custom kernel module. See [this post](https://matthewarcus.wordpress.com/2018/01/27/using-the-cycle-counter-registers-on-the-raspberry-pi-3/).
+By default the user space program has no access to the cycle counter. To enable the use of the register for timestamping, you must load a custom kernel module. See [this post](https://matthewarcus.wordpress.com/2018/01/27/using-the-cycle-counter-registers-on-the-raspberry-pi-3/). Otherwise there will be illegal instruction error when you try to access the register.
 
 If modification is needed for already installed kernal module, use
 ```
