@@ -61,7 +61,9 @@ sudo nice -20 taskset -c 0 ./memory_bandwidth
 gcc client.c -o client -lm
 gcc server.c -o server
 ```
-Start the server first `./server`, then run the client `./client`
+Start the server first `./server`, then run the client `./client`.
+
+Modify the server ip in client.c to enable local or remote testing.
 
 
 ## file system operations
