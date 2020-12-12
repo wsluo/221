@@ -69,10 +69,20 @@ int main()
 			sflag=send(clientSock, &buff, sizeof(buff), 0);
 			printf("send %d \n",sflag);
 			}
+			
+	        __asm__ volatile ("MCR p15, 0, %0, c9, c12, 0\t\n" :: "r"(0x80000007));
+	        __asm__ volatile ("MCR p15, 0, %0, c9, c12, 3\t\n" :: "r"(0x8000000f));
+
+	        __asm__ volatile ("mrc p15, 0, %0, c9, c13, 0":"=r" (t0));
 		
 		//write(clintConnt, dataSending, strlen(dataSending));
-        //close(clintConnt);
-        printf("hahaha\n");
+		close(clientSock);
+		
+		__asm__ volatile ("mrc p15, 0, %0, c9, c13, 0":"=r" (t1));
+		
+		printf("%f tear down time:", (double)(t1-t0)/750000000);
+		
+		
         sleep(1);
      }
  

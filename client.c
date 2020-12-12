@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <arpa/inet.h>
 #include <math.h>
+#include <time.h>
 
 double mean(double *arr,int arrayLen);
 double std(double *arr, int arrayLen);
@@ -48,6 +49,11 @@ int main()
 
     uint32_t t0 = 0;
     uint32_t t1 = 0;
+	
+	int N = 10;
+	time_t start, end;
+	double dif;
+	double bandwidth_results[N];
  
     memset(buff, '0' ,sizeof(buff));
 
@@ -62,8 +68,8 @@ int main()
  
     ipOfServer.sin_family = AF_INET;
     ipOfServer.sin_port = htons(2017);
-    //ipOfServer.sin_addr.s_addr = inet_addr("127.0.0.1");
-	ipOfServer.sin_addr.s_addr = inet_addr("192.168.0.181");
+   // ipOfServer.sin_addr.s_addr = inet_addr("127.0.0.1");
+    ipOfServer.sin_addr.s_addr = inet_addr("192.168.0.181");
 	
 	
     __asm__ volatile ("mrc p15, 0, %0, c9, c13, 0":"=r" (t0));
@@ -103,13 +109,21 @@ int main()
 	printf("ping mean %f, ping std %f \n",mean(ping_results,100)/750000000,std(ping_results,100)/750000000);
 	
 	
-	for (int i=0; i<10; i++){
+	for (int i=0; i<N; i++){
 		printf("%d \n",i);
 		
 		sflag=send(socketDesc, &buff, sizeof(buff), 0);
 		//printf("send %d \n",sflag);
 		
 		int acc=0;
+		
+		//time(&start);
+		
+        __asm__ volatile ("MCR p15, 0, %0, c9, c12, 0\t\n" :: "r"(0x80000007));
+        __asm__ volatile ("MCR p15, 0, %0, c9, c12, 3\t\n" :: "r"(0x8000000f));
+
+        __asm__ volatile ("mrc p15, 0, %0, c9, c13, 0":"=r" (t0));
+		
 		while(1){
 			rflag=recv(socketDesc, &buff, sizeof(buff), 0);
 			acc+=rflag;
@@ -119,7 +133,16 @@ int main()
 				break;}
 		}
 		
+		__asm__ volatile ("mrc p15, 0, %0, c9, c13, 0":"=r" (t1));
+		
+		//time(&end);
+		//dif = difftime (end,start);
+		//bandwidth_results[i] = dif;
+		bandwidth_results[i] = (double)(t1-t0);
+		
 	}
+	
+	printf("transmission time mean %f, std %f",mean(bandwidth_results,N)/750000000,std(bandwidth_results,N)/750000000);
 	
     return 0;
 }
