@@ -54,6 +54,9 @@ sudo nice -20 taskset -c 0 ./memory_access
 
 gcc -Wall -O0 memory_bandwidth.c -o memory_bandwidth -lm
 sudo nice -20 taskset -c 0 ./memory_bandwidth
+
+gcc -Wall -O0 -D_GNU_SOURCE pagefault.c -o pagefault 
+sudo nice -20 taskset -c 0 ./pagefault
 ```
 
 ## networking
