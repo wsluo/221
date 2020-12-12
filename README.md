@@ -42,6 +42,13 @@ sudo nice -20 taskset -c 0 ./thread_creation_overhead
 gcc -Wall -O0 process_creation_overhead.c -o process_creation_overhead -lpthread
 sudo nice -20 taskset -c 0 ./process_creation_overhead
 
+gcc -Wall -O0 -D_GNU_SOURCE process_context_switch.c -o process_context_switch 
+sudo nice -20 taskset -c 0 ./process_context_switch
+
+gcc -Wall -O0 -D_GNU_SOURCE thread_context_switch.c -o thread_context_switch 
+sudo nice -20 taskset -c 0 ./thread_context_switch
+
+
 ```
 
 `calc_average.py` can then be modified to repeat tests with specific repeat numbers.
